@@ -74,8 +74,8 @@ def _Check_Bought_Item(purchased_item: str, inventory: dict, shop_items: dict) -
     else:
         inventory[purchased_item] = {"Amount": 1, "Weight": shop_items[purchased_item]["Weight"], "Cost": shop_items[purchased_item]["Cost"]}
 
-    print(f"You bought {purchased_item}.")
-    return True
+    print(f"You bought {purchased_item}.\n")
+    return False
 
 def _Shop(inventory: dict):
     shop_items: dict = {
