@@ -90,7 +90,7 @@ def _Shop(inventory: dict):
         print("Shop items:")
         for shop_item in shop_items:
             print(f"{shop_item} - {shop_items[shop_item]["Cost"]} gold - {shop_items[shop_item]["Weight"]}kg")
-        print(f"\nYour stats - {inventory["Gold"]["Amount"]} gold")
+        print(f"\nYour stats - {inventory["Gold"]["Amount"]} gold - {_Count_Weight(inventory)}kg of items (max is 100kg)")
         print("What item would you like to buy? (exit to leave the shop)")
         purchased_item = input().capitalize()
         
@@ -114,13 +114,23 @@ def _Delete_Item_From_Inventory(inventory: dict, new_item: str):
         return cost_of_item
     return 0
 
+def _Check_Exit(choice: str):
+    if choice == "Exit":
+        print("\n" + "-" * 50 + "\n")
+        print("Leaving...")
+        return True
+    return False
+
 def _Use_Item(inventory: dict):
     if not _Check_Inventory_Space(inventory):
         return
     while True:
-        print("What item would you like to use?")
+        print("What item would you like to use? (exit to leave this tab)")
         _Show_Inventory(inventory)
         new_item = input().capitalize()
+        if _Check_Exit(new_item):
+            break
+        
         if _Delete_Item_From_Inventory(inventory, new_item):
             print("\n" + "-" * 50 + "\n")
             print(f"You used {new_item}")
@@ -130,9 +140,12 @@ def _Check_Item(inventory: dict):
     if not _Check_Inventory_Space(inventory):
         return
     while True:
-        print("What item would you like to check.")
+        print("What item would you like to check? (exit to leave this tab)")
         _Show_Inventory(inventory)
         item_name = input().capitalize()
+        if _Check_Exit(item_name):
+            break
+        
         if item_name == "Gold":
             print("\n" + "-" * 50 + "\n")
             print(f"You have {inventory["Gold"]["Amount"]} gold.")
@@ -152,9 +165,11 @@ def _Sell_Item(inventory: dict):
         return
     item_to_sell : str
     while True:
-        print("What item would you like to sell?")
+        print("What item would you like to sell? (exit to leave this tab)")
         _Show_Inventory(inventory)
         item_to_sell = input().capitalize()
+        if _Check_Exit(item_to_sell):
+            break
         sell_value = _Delete_Item_From_Inventory(inventory, item_to_sell)
         if sell_value:
             inventory["Gold"]["Amount"] += sell_value
