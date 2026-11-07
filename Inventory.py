@@ -22,7 +22,6 @@ def _Check_Action(choice: str, inventory: dict):
 
 def _Check_Inventory_Space(inventory: dict):
     if len(inventory) == 1:
-        print("\n" + "-" * 50 + "\n")
         print("You dont have any items.\n")
         return False
     return True
@@ -41,6 +40,14 @@ def _Check_Gold(choice: str):
     print("Invalid Item\n")
     return False
 
+def _Count_Weight(inventory: dict):
+    weight = 0
+    for item in inventory:
+        if item == "Gold":
+            continue
+        weight += (inventory[item]["Weight"] * inventory[item]["Amount"])
+    return weight
+
 def _Check_Bought_Item(purchased_item: str, inventory: dict, shop_items: dict) -> None:
     print("\n" + "-" * 50 + "\n")
     
@@ -49,11 +56,15 @@ def _Check_Bought_Item(purchased_item: str, inventory: dict, shop_items: dict) -
         return True
 
     if purchased_item not in shop_items:
-        print("Choose an available item.")
+        print("Choose an available item.\n")
         return False
 
     if shop_items[purchased_item]["Cost"] >= inventory["Gold"]["Amount"]:
-        print("You dont have enough gold.")
+        print("You dont have enough gold.\n")
+        return False
+    
+    if shop_items[purchased_item]["Weight"] + _Count_Weight(inventory) >= 100:
+        print("You cant buy this item, you are too heavy.\n")
         return False
 
     inventory["Gold"]["Amount"] -= shop_items[purchased_item]["Cost"]
@@ -159,6 +170,7 @@ def _Main_Game():
                        "Sword": {"Amount": 1, "Weight": 15, "Cost": 50},
                        "Potion": {"Amount": 1, "Weight": 3, "Cost": 100},
                        "Chestplate": {"Amount": 1, "Weight": 25, "Cost": 200}}
+    
     while True:
         print()
         choice: str = _Player_Input()
